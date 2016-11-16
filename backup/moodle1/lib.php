@@ -18,7 +18,7 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot . '/question/type/wq/quizzes/quizzes.php');
 require_once($CFG->dirroot . '/question/type/wq/lib.php');
-require_once($CFG->dirroot . '/question/type/shortanswerwiris/lib.php')
+require_once($CFG->dirroot . '/question/type/shortanswerwiris/lib.php');
 
 class moodle1_qtype_shortanswerwiris_handler extends moodle1_qtype_shortanswer_handler{
     /**
