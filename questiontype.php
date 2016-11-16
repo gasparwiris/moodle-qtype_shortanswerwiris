@@ -19,6 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/question/type/wq/questiontype.php');
 require_once($CFG->dirroot . '/question/type/shortanswer/questiontype.php');
 require_once($CFG->dirroot . '/question/type/wq/quizzes/quizzes.php');
+require_once('lib.php');
 
 class qtype_shortanswerwiris extends qtype_wq {
 
@@ -81,7 +82,7 @@ class qtype_shortanswerwiris extends qtype_wq {
                     // Compound answers
                     // $originaltext will be used to check if there's a distribution.
                     $originaltext = $answers[$key]['#']['text'][0]['#'];
-                    $text = $this->wrsqz_convert_for_compound($originaltext);
+                    $text = wrsqz_convert_for_compound($originaltext);
                     $data['#']['answer'][$key]['#']['text'][0]['#'] = $text;
                 }
             }
@@ -227,38 +228,6 @@ class qtype_shortanswerwiris extends qtype_wq {
             $qo->wirisquestion = trim($this->decode_html_entities($data['#']['wirisquestion'][0]['#']));
         }
         return $qo;
-    }
-
-    private function wrsqz_convert_for_compound($text) {
-        $answerarray = array();
-        $compoundanswertext = '<math xmlns="http://www.w3.org/1998/Math/MathML">';
-
-        $text = trim($text);
-        if (!strpos($text, '(')) {
-            $answerarray = explode(" ", $text);
-            foreach ($answerarray as $key => $value) {
-                if ($key != 0) {
-                    $compoundanswertext .= '<mspace linebreak="newline"/>';
-                }
-                $value = trim($value);
-                $compoundanswertext .= '<mi>' . substr($value, 1) . '</mi><mo>=</mo><mi>' . $value . '</mi>';
-            }
-        } else {
-            $answerarray = explode(")", $text);
-            foreach ($answerarray as $key => $value) {
-                if ($value != '') {
-                    if ($key != 0) {
-                        $compoundanswertext .= '<mspace linebreak="newline"/>';
-                    }
-                    $openpar = strpos($value, '(');
-                    $value = trim(substr($value, 0, $openpar));
-                    $compoundanswertext .= '<mi>' . substr($value, 1) . '</mi><mo>=</mo><mi>' . $value . '</mi>';
-                }
-            }
-        }
-
-        $compoundanswertext .= '</math>';
-        return $compoundanswertext;
     }
 
     private function wrsqz_get_distribution($text) {
